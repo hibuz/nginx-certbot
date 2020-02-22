@@ -1,9 +1,22 @@
 version: '3'
 
 services:
+  ghost:
+    image: ghost:3.42
+    restart: always
+    container_name: ghost
+    network_mode: "bridge"
+    volumes:
+      - ./data/ghost/content:/var/lib/ghost/content:z
+    environment: # this section can be commented to start in dev mode by default
+      - url="https://hibuz.com" # remove this
   nginx:
     image: nginx:1.19-alpine
-    restart: unless-stopped
+    restart: always
+    container_name: nginx
+    network_mode: "bridge"
+    links:
+      - ghost
     volumes:
       - ./data/nginx:/etc/nginx/conf.d
       - ./data/certbot/conf:/etc/letsencrypt
